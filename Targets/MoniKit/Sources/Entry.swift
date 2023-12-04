@@ -20,6 +20,6 @@ final class Entry {
   }
 }
 
-enum EntryType {
+enum EntryType: Codable {
   case expense, income
 }

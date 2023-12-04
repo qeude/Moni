@@ -26,4 +26,4 @@ let localHelper = LocalHelper(name: "MyPlugin")
 // Creates our project using a helper function defined in ProjectDescriptionHelpers
 let project = Project.app(name: "Moni",
                           platform: .iOS,
-                          additionalTargets: ["MoniKit", "MoniUI"])
+                          additionalTargets: ["MoniKit", "MoniUI", "CreateEntry"])
