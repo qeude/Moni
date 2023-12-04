@@ -6,11 +6,15 @@
 //  Copyright © 2023 qeude. All rights reserved.
 //
 
+import MoniKit
 import SwiftUI
 
-struct SettingsView: View {
+public struct SettingsView: View {
   @AppStorage(SettingsStorage.currency.rawValue) var currency: String = Locale.current.currency!.identifier
-  var body: some View {
+
+  public init() {}
+
+  public var body: some View {
     NavigationStack {
       Form {
         Section("GENERAL") {
