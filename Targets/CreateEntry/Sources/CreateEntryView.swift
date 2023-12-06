@@ -1,15 +1,15 @@
+import Settings
 import SwiftUI
 
 public struct CreateEntryView: View {
+  @AppStorage(SettingsKey.currency.rawValue) var currency: String = Locale.current.currency!.identifier
+  @State var amount: Double = 0
+
   public var body: some View {
     VStack {
       VStack {
-        HStack {
-          Text("Value")
-          Button(action: {}, label: {
-            Text("Clear")
-          })
-        }
+        Text(amount, format: .currency(code: currency))
+          .font(.largeTitle)
         Text("description")
       }
       .frame(maxHeight: .infinity)
@@ -18,8 +18,19 @@ public struct CreateEntryView: View {
           Text("Date")
           Text("Category")
         }
-        NumberPadView()
-          .padding()
+        NumberPadView(numberDisabled: amount >= 1_000_000_000) { key in
+          switch key {
+          case .number(let value):
+            amount *= 10
+            amount += Double(value) / 100
+            break
+          case .delete:
+            amount = Double(Int(amount * 10)) / 100
+          case .submit:
+            break
+          }
+        }
+        .padding()
       }
     }
   }

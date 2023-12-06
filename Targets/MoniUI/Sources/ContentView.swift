@@ -35,8 +35,8 @@ public struct ContentView: View {
       .clipShape(Circle())
     }
     .onChange(of: selection) { oldValue, newValue in
-      if newValue == 1 { // replace 2 with your index
-        self.selection = oldValue // reset the selection in case we somehow press the middle tab
+      if newValue == 1 {
+        self.selection = oldValue
       }
     }
   }

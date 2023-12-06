@@ -8,6 +8,6 @@
 
 import Foundation
 
-public enum SettingsStorage: String {
+public enum SettingsKey: String {
   case currency
 }

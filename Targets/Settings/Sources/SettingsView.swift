@@ -10,7 +10,7 @@ import MoniKit
 import SwiftUI
 
 public struct SettingsView: View {
-  @AppStorage(SettingsStorage.currency.rawValue) var currency: String = Locale.current.currency!.identifier
+  @AppStorage(SettingsKey.currency.rawValue) var currency: String = Locale.current.currency!.identifier
 
   public init() {}
 
@@ -24,6 +24,7 @@ public struct SettingsView: View {
               ForEach(Currency.allCurrencies, id: \.code) { currency in
                 HStack {
                   Text(currency.code)
+                    .monospaced()
                   Text(currency.name)
                 }
               }
