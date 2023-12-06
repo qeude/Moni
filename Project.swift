@@ -27,6 +27,8 @@ let localHelper = LocalHelper(name: "MyPlugin")
 let project = Project.app(name: "Moni",
                           destinations: [.iPhone, .iPad, .mac],
                           deploymentTargets: .init(iOS: "17.0", macOS: "14.0", watchOS: nil, tvOS: nil, visionOS: nil),
+                          testDestination: .iPhone,
+                          testDeploymentTargets: .init(iOS: "17.0", macOS: nil, watchOS: nil, tvOS: nil, visionOS: nil),
                           additionalTargets: [
                             "MoniKit",
                             "MoniUI",

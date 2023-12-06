@@ -11,14 +11,26 @@ extension Project {
     name: String, 
     destinations: Destinations,
     deploymentTargets: DeploymentTargets,
+    testDestination: Destination,
+    testDeploymentTargets: DeploymentTargets,
     additionalTargets: [String]) -> Project {
     var targets = makeAppTargets(name: name,
                                  destinations: destinations,
                                  deploymentTargets: deploymentTargets,
+                                 testDestination: testDestination,
+                                 testDeploymentTargets: testDeploymentTargets,
                                  dependencies: additionalTargets.map { TargetDependency.target(name: $0) } + [
                                   .external(name: "Macro"),
                                  ])
-      targets += additionalTargets.flatMap({ makeFrameworkTargets(name: $0, destinations: destinations, deploymentTargets: deploymentTargets) })
+      targets += additionalTargets.flatMap({
+        makeFrameworkTargets(
+          name: $0,
+          destinations: destinations, 
+          deploymentTargets: deploymentTargets,
+          testDestination: testDestination,
+          testDeploymentTargets: testDeploymentTargets
+        )
+      })
     return Project(name: name,
                    organizationName: "qeude",
                    targets: targets)
@@ -27,7 +39,13 @@ extension Project {
   // MARK: - Private
 
   /// Helper function to create a framework target and an associated unit test target
-  private static func makeFrameworkTargets(name: String, destinations: Destinations, deploymentTargets: DeploymentTargets) -> [Target] {
+  private static func makeFrameworkTargets(
+    name: String,
+    destinations: Destinations,
+    deploymentTargets: DeploymentTargets,
+    testDestination: Destination,
+    testDeploymentTargets: DeploymentTargets
+  ) -> [Target] {
     let sources = Target(name: name,
                          destinations: destinations,
                          product: .framework,
@@ -40,10 +58,10 @@ extension Project {
                           .external(name: "Macro")
                          ])
     let tests = Target(name: "\(name)Tests",
-                       destinations: destinations,
+                       destinations: [testDestination],
                        product: .unitTests,
                        bundleId: "com.qeude.\(name)Tests",
-                       deploymentTargets: deploymentTargets,
+                       deploymentTargets: testDeploymentTargets,
                        infoPlist: .default,
                        sources: ["Targets/\(name)/Tests/**"],
                        resources: [],
@@ -52,7 +70,13 @@ extension Project {
   }
 
   /// Helper function to create the application target and the unit test target.
-  private static func makeAppTargets(name: String, destinations: Destinations,     deploymentTargets: DeploymentTargets, dependencies: [TargetDependency]) -> [Target] {
+  private static func makeAppTargets(
+    name: String, destinations: Destinations,
+    deploymentTargets: DeploymentTargets,
+    testDestination: Destination,
+    testDeploymentTargets: DeploymentTargets,
+    dependencies: [TargetDependency]
+  ) -> [Target] {
     let infoPlist: [String: Plist.Value] = [
       "CFBundleShortVersionString": "1.0",
       "CFBundleVersion": "1",
@@ -74,10 +98,10 @@ extension Project {
 
     let testTarget = Target(
       name: "\(name)Tests",
-      destinations: destinations,
+      destinations: [testDestination],
       product: .unitTests,
       bundleId: "com.qeude.\(name)Tests",
-      deploymentTargets: deploymentTargets,
+      deploymentTargets: testDeploymentTargets,
       infoPlist: .default,
       sources: ["Targets/\(name)/Tests/**"],
       dependencies: [
